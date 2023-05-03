@@ -2,6 +2,8 @@
 
 use std::cmp::Ordering;
 use std::io;
+use std::ops::Add;
+use std::process::Output;
 use rand::Rng;
 
 fn main() {
@@ -212,5 +214,69 @@ fn main() {
     println!("Vec lenght {}", vec2.len());
     println!("Pop = {:?}", vec2.pop());
 
+    say_hello();
 
+    get_sum(8, 9);
+
+    println!("{}", get_sum2(7, 7));
+
+    let (val_1, val_2) = get_2 (3);
+    println!("Nums : {} {}", val_1, val_2);
+
+    let num_list = vec![1,2,3,4,5];
+    println!("Sum of list = {}", sum_list(&num_list));
+
+    println!("5 + 4 = {}", get_sum_gen(5, 4));
+    println!("5.7 + 4.6 = {}", get_sum_gen(5.7, 4.6));
+    let str3 = String::from("World");
+    //let str4 = str3;
+    let str4 = str3.clone();
+    print_str(str3);
+    let str5 = print_return_str(str4);
 }
+
+fn say_hello() {
+    println!("Olá!")
+}
+
+fn get_sum(x: i32, y: i32) {
+    println!("{} + {} = {}", x, y, x + y);
+}
+
+fn get_sum2(x: i32, y: i32) -> i32 { // return
+    x + y
+}
+fn get_sum3(x: i32, y: i32) -> i32 { // return
+    return x + y;
+}
+
+fn get_2(x: i32) -> (i32, i32) { // return
+    return (x + 1, x + 2);
+}
+
+fn sum_list(list: &[i32]) -> i32 { // return
+   let mut sum = 0;
+    for &val in list.iter() {
+        sum += &val;
+    }
+    sum
+}
+
+fn get_sum_gen<T:Add<Output = T>>(x: T, y: T) -> T {
+    return x + y;
+}
+
+fn print_str(x: String) {
+    println!("Uma string {}", x);
+}
+
+fn print_return_str(x: String) -> String{
+    println!("Uma string {}", x);
+    x
+}
+
+fn change_string(name: &mut String) {
+    name.push_str(" is happy");
+    println!("Message : {}", name);
+}
+
