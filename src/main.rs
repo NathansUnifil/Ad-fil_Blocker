@@ -5,6 +5,14 @@ use std::io;
 use std::ops::Add;
 use std::process::Output;
 use rand::Rng;
+use std::collections::HashMap;
+use std::f32::consts::PI;
+use std::fmt::Display;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+
+//mod restaurante;
+//use crate::restaurante::order_food;
 
 fn main() {
     /*
@@ -233,6 +241,116 @@ fn main() {
     let str4 = str3.clone();
     print_str(str3);
     let str5 = print_return_str(str4);
+
+    let mut heroes = HashMap::new();
+    heroes.insert("Superman", "Clack Kente");
+    heroes.insert("Spiderman", "Peter Parker");
+    heroes.insert("Aquaman", "Aquaboy");
+
+    for(k,v) in heroes.iter() {
+        println!("{} e {} são a mesma pessoa", k, v);
+    }
+
+    //println!("Length = {}", heroes.len());
+
+    if heroes.contains_key(&"Superman") {
+        let the_superman = heroes.get(&"Superman");
+        match the_superman {
+            Some(x) => println!("Superman é um heroi"),
+            None => println!("Superman não é um heroi"),
+        }
+    }
+
+    struct Customer{
+        name: String,
+        address: String,
+        balance: f32,
+    }
+
+    let mut bob = Customer{
+        name: String::from("Bob Smith"),
+        address: String::from("555 Man St"),
+        balance: 234.50
+    };
+    bob.address = String::from("¨505 Main St");
+
+
+    struct Rectangle<T, U> { // Com genericos
+        length: T,
+        height: U,
+    }
+
+    let rec = Rectangle {
+        length: 4, height: 10.5
+    };
+
+    trait Shaped {
+        fn new(length: f32, width: f32) -> Self;
+        fn area(&self) -> f32;
+    }
+
+    struct NewRectangle {length: f32, width: f32};
+    struct Circle {length: f32, width: f32};
+
+    impl Shaped for NewRectangle {
+        fn new (length: f32, width: f32) -> NewRectangle {
+            return  NewRectangle{length, width};
+        }
+        fn area(&self) -> f32 {
+            return self.length * self.width;
+        }
+    };
+
+    impl Shaped for Circle {
+        fn new (length: f32, width: f32) -> Circle {
+            return  Circle{length, width};
+        }
+        fn area(&self) -> f32 {
+            return (self.length / 2.0).powf(2.0) * PI;
+        }
+    };
+
+    let rec: NewRectangle = Shaped::new(10.0, 10.0);
+    println!("Rectangle Area : {}", rec.area());
+    let cric: Circle = Shaped::new(10.0, 10.0);
+    println!("Circle Area : {}", cric.area());
+
+    //order_food();
+
+    //panic!("Erro Maravilhoso!"); //error handeling
+
+    //let lil_arr = [1,2];
+    //println!("{}", lil_arr[10]); // vai da trigger no panic! automaticamente
+
+    let path = "lines.txt";
+    let output = File::create(path);
+    let mut output = match output {
+        Ok(file) => file,
+        Err(error) => {
+            panic!("Erro em criar o arquivo : {:?}", error); //{:?} São para Resultados/Results
+        }
+    };
+    write!(output, "Just some\nRamdom words").expect(
+        "Erro ao colocar texto no arquivo"
+    );
+
+    let input = File::open(path).unwrap();
+    let buffered = BufReader::new(input);
+    for line in buffered.lines() {
+        println!("{}", line.unwrap());
+    }
+
+    let output2 = File::create("rand.txt");
+    let output2 = match output2 {
+        Ok(file) => file,
+        Err(error) => match error.kind{
+            //continua aqui depois
+        }
+    };
+
+
+
+
 }
 
 fn say_hello() {
