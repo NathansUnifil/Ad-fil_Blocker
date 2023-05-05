@@ -9,7 +9,13 @@ use std::collections::HashMap;
 use std::f32::consts::PI;
 use std::fmt::Display;
 use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::io::{BufRead, BufReader, ErrorKind};
+use std::io::Write;
+use std::thread;
+use std::time::Duration;
+use std::rc::Rc;
+use std::cell::RefCell;
+use std::sync::{Arc, Mutex};
 
 //mod restaurante;
 //use crate::restaurante::order_food;
@@ -343,12 +349,147 @@ fn main() {
     let output2 = File::create("rand.txt");
     let output2 = match output2 {
         Ok(file) => file,
-        Err(error) => match error.kind{
-            //continua aqui depois
+        Err(error) => match error.kind(){
+            ErrorKind::NotFound => match File::create("rand.txt"){
+                Ok(fc) => fc,
+                Err(e) => panic!("Não foi possivel criar o arquivo = {:?}", error),
+            },
+            _other_error => panic!("Não foi possivel pegar o arquivo = {:?}", error),
+        },
+    };
+
+    let mut arr_it = [1,2,3,4]; //Ilerators não apaga os valores da memoria depois de usado, mais não podem ser mudados depois.
+    for val in arr_it.iter() {
+        println!("{}", val);
+    }
+    let mut iter1 = arr_it.into_iter(); // Consome o arr, mais não pode ser usado depois
+    println!("1st : {:?}", iter1.next());
+
+    // Closures é uma função sem nome. Pode passar funções para outras funções. Sã0 definidos por variaveis
+
+    // let var_name = |paramentros| => return_type {Body}
+
+    let can_votes = |age: i32| {
+        age >= 18
+    };
+    println!("pode votar = {}", can_votes(8));
+
+    // Closures podem acessar outras variveis fora de seu body (Quando der borriwing)
+
+    let mut samp1 = 5;
+    let print_var = || println!("Sampl = {}", samp1);
+    print_var();
+    samp1 = 10;
+    let mut change_var = || samp1 += 1;
+    change_var();
+    println!("Sampl = {}", samp1);
+    samp1 = 10;
+    println!("Sampl = {}", samp1);
+
+    fn use_func <T> (a: i32, b: i32, func: T) -> i32 where T: Fn(i32, i32) -> i32 {
+        func (a, b)
+    }
+    let sum = |a, b| a + b;
+    let prod = |a, b| a * b;
+    println!("9 + 9 = {}", use_func(9,9, sum));
+    println!("9 * 9 = {}", use_func(9,9, prod));
+
+    // Box Pointers = Quando você passa muita info para a Heap, Você trafere para pointers no stack
+
+    let b_int1 = Box::new(10);
+    println!("box int1 = {}", b_int1);
+
+    // Exemplo de uma arvore binaria
+
+    struct TreeNode<T> {
+        pub left: Option<Box<TreeNode<T>>>,
+        pub right: Option<Box<TreeNode<T>>>,
+        pub key: T,
+    }
+    impl <T> TreeNode<T> {
+        pub fn new(key: T) -> Self {
+            TreeNode { left: None, right: None, key,}
         }
+        pub fn left(mut self, node: TreeNode<T>) -> Self {
+            self.left = Some(Box::new(node));
+            self
+        }
+        pub fn right(mut self, node: TreeNode<T>) -> Self {
+            self.right = Some(Box::new(node));
+            self
+        }
+    }
+
+    let node1 = TreeNode::new(1).left(TreeNode::new(2)).right(TreeNode::new(2));
+
+    // Concurrecy vai executar blocos de codigo independetemente
+    // Esses blocos de codigo são chamados de threads
+
+    /*
+
+    let thread1 = thread::spawn(|| {
+        for i in 1..25 {
+            println!("Spawned thread = {}", i);
+            thread::sleep(Duration::from_millis(1));
+        }
+    });
+    for i in 1..20 {
+        println!("Main thread = {}", i);
+        thread::sleep(Duration::from_millis(1));
     };
 
 
+    thread1.join().unwrap(); // Usa isso para juntar as duas thread e fazer elas terminarem juntas, senão, não tem garantia que vão
+
+
+     */
+
+    pub struct Bank {
+        balance: f32
+    }
+    /*
+    fn withdraw(the_bank: &mut Bank, amt: f32) {
+        the_bank.balance -= amt;
+    }
+    let mut bank = Bank {balance: 100.0};
+
+    withdraw(&mut bank, 5.00);
+
+    println!("Balance = {}",bank.balance);
+
+    fn customer(the_bank: &mut Bank) {
+        withdraw(the_bank, 5.00);
+    }
+    thread::spawn(|| {
+        customer (&mut bank)
+    }).join();unwrap();
+     */
+
+    fn withdraw(the_bank: &Arc<Mutex<Bank>>, amt: f32) {
+        let mut bank_ref = the_bank.lock().unwrap();
+        if bank_ref.balance < 5.00 {
+            println!("Current Balance : {} Withdrawal a smaller amount", bank_ref.balance);
+        } else {
+            bank_ref.balance -= amt;
+            println!("Customer Withdrew {}, Current Balance {}", amt, bank_ref.balance);
+        }
+    }
+    fn customer(the_bank: Arc<Mutex<Bank>>) {
+        withdraw(&the_bank, 5.00);
+    }
+    let bank: Arc<Mutex<Bank>> = Arc::new(Mutex::new(Bank{balance: 20.00}));
+
+    let handles = (0..10).map(|_| {
+        let bank_ref = bank.clone();
+        thread::spawn(|| {
+            customer(bank_ref)
+        })
+    });
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Total {}", bank.lock().unwrap().balance);
 
 
 }
