@@ -3,41 +3,107 @@ use std::net::SocketAddr;
 use std::thread::Builder;
 #[tokio::main]
 
-use hyper::{service::{make_service_fn, service_fn}, Request, Body, Responce};
+use hyper::{service::service_fn, Body, Client, Request, Response, Server};
 use hyper::header::SERVER;
-use hyper::Response;
 use hyper::server::conn::AddrIncoming;
-use tokio::net::windows::named_pipe::PipeEnd::Client;
 use tower::MakeService;
 use tower::make::Shared;
+use tokio::select;
 
 async fn main() {
-    let make_service = Shared::new(service_fn(handle()));
-    let addr = SocketAddr::from([127, 0, 0, 1], 3000);
-    let server = Server::bind(&addr).serve(make_service);
 
-    if let Err(e) = server.await {
-        println!("error: {}", e)
-    }
+
+
+	/*
+
+	let mut response = Response::new(Body::empty());
+
+	match (req.method(), req.uri().path()) {
+		(&Method::GET, "/") => {
+			*response.body_mut() = Body::from("Try POSTing data to /echo");
+		},
+		(&Method::POST, "/echo") => {
+			*response.body_mut() = req.into_body();
+		},
+		_ => {
+			*response.status_mut() = StatusCode::NOT_FOUND;
+		},
+
+		(&Method::POST, "/echo/reverse") => {
+			// Protect our server from massive bodies.
+			let upper = req.body().size_hint().upper().unwrap_or(u64::MAX);
+			if upper > 1024 * 64 {
+				let mut resp = Response::new(Body::from("Body too big"));
+				*resp.status_mut() = hyper::StatusCode::PAYLOAD_TOO_LARGE;
+				return Ok();
+			}
+
+			// Await the full body to be concatenated into a single `Bytes`...
+			let full_body = hyper::body::to_bytes(req.into_body()).await?;
+
+			// Iterate the full body in reverse order and collect into a new Vec.
+			let reversed = full_body.iter()
+				.rev()
+				.cloned()
+				.collect::<Vec<u8>>();
+
+			*response.body_mut() = reversed.into();
+		},
+
+	};
+
+	Ok(response);
+
+	 */
+
+
+	let make_service = Shared::new(service_fn(handle(Default::default())));
+	let addr = SocketAddr::from([127, 0, 0, 1], 3000);
+	let server = Server::bind(&addr).serve(make_service);
+
+	if let Err(e) = server.await {
+		println!("error: {}", e)
+	}
 }
 
-async fn handle(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
+async fn handle(req: Request<Body>) {
 
-    //Ok(Response::new(Body::from("Hello from HTTP proxy")))
-    let client = Client::new();
-    client.request(req).await
+	//Ok(Response::new(Body::from("Hello from HTTP proxy")))
+	//let client = Client::new();
+	//client.request(req).await
 
-}
+	let filtros = ["*://*.doubleclick.net/*",
+		"*://partner.googleadservices.com/*",
+		"*://*.googlesyndication.com/*",
+		"*://*.google-analytics.com/*",
+		"*://creative.ak.fbcdn.net/*",
+		"*://*.adbrite.com/*",
+		"*://*.exponential.com/*",
+		"*://*.quantserve.com/*",
+		"*://*.scorecardresearch.com/*",
+		"*://*.zedo.com/*",];
+
+	let path = req.uri().path();
+
+	if path.contains(filtros) {
+		Response::new(Body::from("Você foi cancelado!"));
+		select! {
+			_ = filtros.cancelled() => {
+				5
+			}
+
+		} }}
+
 
 async fn log(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
 
-    let path = req.uri().path();
+	let path = req.uri().path();
 
-    if path.starts_with("/api") {
-        println!("API Path = {}", path);
-    } else {
-        println!("Generic path = {}", path)
-    }
+	if path.starts_with("/api") {
+		println!("API Path = {}", path);
+	} else {
+		println!("Generic path = {}", path)
+	}
 
-    handler(req).await
+	handler(req).await
 }
