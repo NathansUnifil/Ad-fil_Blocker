@@ -1,18 +1,11 @@
-use std::convert::Infallible;
-use std::net::SocketAddr;
-use std::thread::Builder;
-#[tokio::main]
-
 use hyper::{service::service_fn, Body, Client, Request, Response, Server};
-use hyper::header::SERVER;
-use hyper::server::conn::AddrIncoming;
-use tower::MakeService;
+use std::net::SocketAddr;
 use tower::make::Shared;
 use tokio::select;
 
+#[tokio::main]
+
 async fn main() {
-
-
 
 	/*
 
@@ -57,20 +50,18 @@ async fn main() {
 	 */
 
 
-	let make_service = Shared::new(service_fn(handle(Default::default())));
-	let addr = SocketAddr::from([127, 0, 0, 1], 3000);
+	let make_service = Shared::new(service_fn(log));
+	let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 	let server = Server::bind(&addr).serve(make_service);
 
 	if let Err(e) = server.await {
-		println!("error: {}", e)
+		println!("error: {}", e);
 	}
 }
 
-async fn handle(req: Request<Body>) {
+async fn handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
 
 	//Ok(Response::new(Body::from("Hello from HTTP proxy")))
-	//let client = Client::new();
-	//client.request(req).await
 
 	let filtros = ["*://*.doubleclick.net/*",
 		"*://partner.googleadservices.com/*",
@@ -85,14 +76,19 @@ async fn handle(req: Request<Body>) {
 
 	let path = req.uri().path();
 
-	if path.contains(filtros) {
+	if path.chars().any(filtros) {
 		Response::new(Body::from("Você foi cancelado!"));
 		select! {
 			_ = filtros.cancelled() => {
-				5
+				()
 			}
 
-		} }}
+		}
+	}
+	let client = Client::new();
+	client.request(req).await
+
+}
 
 
 async fn log(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
@@ -105,5 +101,5 @@ async fn log(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
 		println!("Generic path = {}", path)
 	}
 
-	handler(req).await
+	handle(req).await
 }
