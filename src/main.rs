@@ -2,53 +2,11 @@ use hyper::{service::service_fn, Body, Client, Request, Response, Server};
 use std::net::SocketAddr;
 use tower::make::Shared;
 use tokio::select;
+use tokio_util::sync::CancellationToken;
 
 #[tokio::main]
 
 async fn main() {
-
-	/*
-
-	let mut response = Response::new(Body::empty());
-
-	match (req.method(), req.uri().path()) {
-		(&Method::GET, "/") => {
-			*response.body_mut() = Body::from("Try POSTing data to /echo");
-		},
-		(&Method::POST, "/echo") => {
-			*response.body_mut() = req.into_body();
-		},
-		_ => {
-			*response.status_mut() = StatusCode::NOT_FOUND;
-		},
-
-		(&Method::POST, "/echo/reverse") => {
-			// Protect our server from massive bodies.
-			let upper = req.body().size_hint().upper().unwrap_or(u64::MAX);
-			if upper > 1024 * 64 {
-				let mut resp = Response::new(Body::from("Body too big"));
-				*resp.status_mut() = hyper::StatusCode::PAYLOAD_TOO_LARGE;
-				return Ok();
-			}
-
-			// Await the full body to be concatenated into a single `Bytes`...
-			let full_body = hyper::body::to_bytes(req.into_body()).await?;
-
-			// Iterate the full body in reverse order and collect into a new Vec.
-			let reversed = full_body.iter()
-				.rev()
-				.cloned()
-				.collect::<Vec<u8>>();
-
-			*response.body_mut() = reversed.into();
-		},
-
-	};
-
-	Ok(response);
-
-	 */
-
 
 	let make_service = Shared::new(service_fn(log));
 	let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
@@ -60,6 +18,9 @@ async fn main() {
 }
 
 async fn handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
+
+	let token = CancellationToken::new();
+	let cloned_token = token.clone();
 
 	//Ok(Response::new(Body::from("Hello from HTTP proxy")))
 
@@ -76,15 +37,28 @@ async fn handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
 
 	let path = req.uri().path();
 
-	if path.chars().any(filtros) {
-		Response::new(Body::from("Você foi cancelado!"));
-		select! {
-			_ = filtros.cancelled() => {
-				()
-			}
-
+	let join_handle = tokio::spawn(async move {
+		if path.chars().any(filtros) {
+			Response::new(Body::from("Você foi cancelado!"));
+			select! {
+			_ = cloned_token.cancelled() => {
+				5
+				}
+			//_ = tokio::time::sleep(std::time::Duration::from_secs(9999)) => {
+                //99
+			//}
 		}
-	}
+		}
+	} 5 );
+
+	tokio::spawn(async move {
+		tokio::time::sleep(std::time::Duration::from_millis(10)).await;
+		token.cancel();
+	});
+
+
+	assert_eq!(5, join_handle.await.unwrap());
+
 	let client = Client::new();
 	client.request(req).await
 
