@@ -1,13 +1,72 @@
-use hyper::{service::service_fn, Body, Client, Request, Response, Server};
-use std::net::SocketAddr;
-use tower::make::Shared;
-use tokio::select;
-use tokio_util::sync::CancellationToken;
+use hyper::{Body, Client, Request, Response};
+use reqwest;
 
 #[tokio::main]
 
 async fn main() {
 
+	let filtros=["*://*.doubleclick.net/*",
+	"*://partner.googleadservices.com/*",
+	"*://*.googlesyndication.com/*",
+	"*://*.google-analytics.com/*",
+	"*://creative.ak.fbcdn.net/*",
+	"*://*.adbrite.com/*",
+	"*://*.exponential.com/*",
+	"*://*.quantserve.com/*",
+	"*://*.scorecardresearch.com/*",
+	"*://*.zedo.com/*",];
+
+	let resp1 = match reqwest::blocking::get("*://*.doubleclick.net/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp1);
+	let resp2 = match reqwest::blocking::get("*://partner.googleadservices.com/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp2);
+	let resp3 = match reqwest::blocking::get("*://*.googlesyndication.com/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp3);
+	let resp4 = match reqwest::blocking::get("*://*.google-analytics.com/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp4);
+	let resp5 = match reqwest::blocking::get("*://creative.ak.fbcdn.net/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp5);
+	let resp6 = match reqwest::blocking::get("*://*.adbrite.com/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp6);
+	let resp7 = match reqwest::blocking::get("*://*.exponential.com/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp7);
+	let resp8 = match reqwest::blocking::get("*://*.quantserve.com/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp8);
+	let resp9 = match reqwest::blocking::get("*://*.scorecardresearch.com/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp9);
+	let resp10 = match reqwest::blocking::get("*://*.zedo.com/*").await {
+		Ok(server) => server.text().await.unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+	println!("{}", resp10);
+	/*
 	let make_service = Shared::new(service_fn(log));
 	let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 	let server = Server::bind(&addr).serve(make_service);
@@ -15,16 +74,17 @@ async fn main() {
 	if let Err(e) = server.await {
 		println!("error: {}", e);
 	}
+	*/
 }
 
 async fn handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
+	let client = Client::new();
+	client.request(req).await
+}
 
-	let token = CancellationToken::new();
-	let cloned_token = token.clone();
+async fn log(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
 
-	//Ok(Response::new(Body::from("Hello from HTTP proxy")))
-
-	let filtros = ["*://*.doubleclick.net/*",
+	let filtros =["*://*.doubleclick.net/*",
 		"*://partner.googleadservices.com/*",
 		"*://*.googlesyndication.com/*",
 		"*://*.google-analytics.com/*",
@@ -33,44 +93,13 @@ async fn handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
 		"*://*.exponential.com/*",
 		"*://*.quantserve.com/*",
 		"*://*.scorecardresearch.com/*",
-		"*://*.zedo.com/*",];
+		"*://*.zedo.com/*",
+		"*://*.httpbin.org/*"];
 
 	let path = req.uri().path();
 
-	let join_handle = tokio::spawn(async move {
-		if path.chars().any(filtros) {
-			Response::new(Body::from("Você foi cancelado!"));
-			select! {
-			_ = cloned_token.cancelled() => {
-				5
-				}
-			//_ = tokio::time::sleep(std::time::Duration::from_secs(9999)) => {
-                //99
-			//}
-		}
-		}
-	} 5 );
-
-	tokio::spawn(async move {
-		tokio::time::sleep(std::time::Duration::from_millis(10)).await;
-		token.cancel();
-	});
-
-
-	assert_eq!(5, join_handle.await.unwrap());
-
-	let client = Client::new();
-	client.request(req).await
-
-}
-
-
-async fn log(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
-
-	let path = req.uri().path();
-
-	if path.starts_with("/api") {
-		println!("API Path = {}", path);
+	if path.starts_with(filtros) {
+		println!("Site popup encotrado encontrado = {}", path);
 	} else {
 		println!("Generic path = {}", path)
 	}
