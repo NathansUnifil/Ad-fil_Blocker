@@ -1,6 +1,9 @@
-use hyper::{Body, Client, Request, Response};
+use std::net::SocketAddr;
+use hyper::{service::service_fn, Body, Client, Request, Response, Server};
 use reqwest;
-use anchor_lang::solana_program::entrypoint::ProgramResult;
+use tower::make::Shared;
+//use anchor_lang::solana_program::entrypoint::ProgramResult;
+
 
 #[tokio::main]
 async fn main() ->  Result<(), Box<dyn std::error::Error>>{
@@ -16,8 +19,11 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 		//	"*://*.scorecardresearch.com/*",
 		//	"*://*.zedo.com/*", ];
 
+		// new client
+
 		let client = hyper::Client::new();
 
+		// Bob the builder for getting the url
 		let req1 = hyper::Request::builder()
 			.method(hyper::Method::GET)
 			.uri("*://*.doubleclick.net/*")
@@ -30,10 +36,9 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 		// Get the response body bytes.
 		let body_bytes1 = hyper::body::to_bytes(hyperresp1.into_body()).await?;
 
-		// Convert the body bytes to utf-8
-		let body1 = String::from_utf8(body_bytes1.to_vec()).unwrap();
-
 		// 2
+
+		let body1 = String::from_utf8(body_bytes1.to_vec()).unwrap();
 
 		let req2 = hyper::Request::builder()
 			.method(hyper::Method::GET)
@@ -41,13 +46,10 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			.header("user-agent", "the-awesome-agent/007")
 			.body(hyper::Body::from(""))?;
 
-		// Pass our request builder object to our client.
 		let hyperresp2 = client.request(req2).await?;
 
-		// Get the response body bytes.
 		let body_bytes2 = hyper::body::to_bytes(hyperresp2.into_body()).await?;
 
-		// Convert the body bytes to utf-8
 		let body2 = String::from_utf8(body_bytes2.to_vec()).unwrap();
 
 		// 3
@@ -58,13 +60,10 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			.header("user-agent", "the-awesome-agent/007")
 			.body(hyper::Body::from(""))?;
 
-		// Pass our request builder object to our client.
 		let hyperresp3 = client.request(req3).await?;
 
-		// Get the response body bytes.
 		let body_bytes3 = hyper::body::to_bytes(hyperresp3.into_body()).await?;
 
-		// Convert the body bytes to utf-8
 		let body3 = String::from_utf8(body_bytes3.to_vec()).unwrap();
 
 		// 4
@@ -75,13 +74,10 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			.header("user-agent", "the-awesome-agent/007")
 			.body(hyper::Body::from(""))?;
 
-		// Pass our request builder object to our client.
 		let hyperresp4 = client.request(req4).await?;
 
-		// Get the response body bytes.
 		let body_bytes4 = hyper::body::to_bytes(hyperresp4.into_body()).await?;
 
-		// Convert the body bytes to utf-8
 		let body4 = String::from_utf8(body_bytes4.to_vec()).unwrap();
 
 		// 5
@@ -92,13 +88,10 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			.header("user-agent", "the-awesome-agent/007")
 			.body(hyper::Body::from(""))?;
 
-		// Pass our request builder object to our client.
 		let hyperresp5 = client.request(req5).await?;
 
-		// Get the response body bytes.
 		let body_bytes5 = hyper::body::to_bytes(hyperresp5.into_body()).await?;
 
-		// Convert the body bytes to utf-8
 		let body5 = String::from_utf8(body_bytes5.to_vec()).unwrap();
 
 		// 6
@@ -109,13 +102,10 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			.header("user-agent", "the-awesome-agent/007")
 			.body(hyper::Body::from(""))?;
 
-		// Pass our request builder object to our client.
 		let hyperresp6 = client.request(req6).await?;
 
-		// Get the response body bytes.
 		let body_bytes6 = hyper::body::to_bytes(hyperresp6.into_body()).await?;
 
-		// Convert the body bytes to utf-8
 		let body6 = String::from_utf8(body_bytes6.to_vec()).unwrap();
 
 		// 7
@@ -126,13 +116,10 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			.header("user-agent", "the-awesome-agent/007")
 			.body(hyper::Body::from(""))?;
 
-		// Pass our request builder object to our client.
 		let hyperresp7 = client.request(req7).await?;
 
-		// Get the response body bytes.
 		let body_bytes7 = hyper::body::to_bytes(hyperresp7.into_body()).await?;
 
-		// Convert the body bytes to utf-8
 		let body7 = String::from_utf8(body_bytes7.to_vec()).unwrap();
 
 		// 8
@@ -143,13 +130,10 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			.header("user-agent", "the-awesome-agent/007")
 			.body(hyper::Body::from(""))?;
 
-		// Pass our request builder object to our client.
 		let hyperresp8 = client.request(req8).await?;
 
-		// Get the response body bytes.
 		let body_bytes8 = hyper::body::to_bytes(hyperresp8.into_body()).await?;
 
-		// Convert the body bytes to utf-8
 		let body8 = String::from_utf8(body_bytes8.to_vec()).unwrap();
 
 		// 9
@@ -160,13 +144,10 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			.header("user-agent", "the-awesome-agent/007")
 			.body(hyper::Body::from(""))?;
 
-		// Pass our request builder object to our client.
 		let hyperresp9 = client.request(req9).await?;
 
-		// Get the response body bytes.
 		let body_bytes9 = hyper::body::to_bytes(hyperresp9.into_body()).await?;
 
-		// Convert the body bytes to utf-8
 		let body9 = String::from_utf8(body_bytes9.to_vec()).unwrap();
 
 		// 10
@@ -177,14 +158,13 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			.header("user-agent", "the-awesome-agent/007")
 			.body(hyper::Body::from(""))?;
 
-		// Pass our request builder object to our client.
 		let hyperresp10 = client.request(req10).await?;
 
-		// Get the response body bytes.
 		let body_bytes10 = hyper::body::to_bytes(hyperresp10.into_body()).await?;
 
-		// Convert the body bytes to utf-8
 		let body10 = String::from_utf8(body_bytes10.to_vec()).unwrap();
+
+		// Responses start here
 
 		let resp1 = match reqwest::blocking::get(body1) {
 			Ok(server) => server.text().unwrap(),
@@ -236,7 +216,7 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 			Err(err) => panic!("Error: {}", err)
 		};
 		println!("{}", resp10);
-		/*
+
 	let make_service = Shared::new(service_fn(log));
 	let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 	let server = Server::bind(&addr).serve(make_service);
@@ -244,8 +224,7 @@ async fn main() ->  Result<(), Box<dyn std::error::Error>>{
 	if let Err(e) = server.await {
 		println!("error: {}", e);
 	}
-	*/
-		Ok::<(), ProgramResult>(()).expect("TODO: panic message");
+		// Ok::<(), e>(()).expect("TODO: panic message");
 	}
 }
 
