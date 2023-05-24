@@ -1,70 +1,58 @@
+
 use reqwest;
+use reqwest::blocking::Client;
 
-fn main() ->  Result<(), Box<dyn std::error::Error>>{
-	loop {
-		// let filtros = ["https://doubleclick.net/",
-		//	"https://googleadservices.com/",
-		//	"https://googlesyndication.com/",
-		//	"https://google-analytics.com/",
-		//	"https://creative.ak.fbcdn.net/",
-		//	"https://adbrite.com/",
-		//	"https://exponential.com/",
-		//	"https://quantserve.com/",
-		//	"https://scorecardresearch.com/",
-		//	"https://zedo.com/", ];
+fn todos_blockings_gets() ->  Result<(), Box<dyn std::error::Error>> {
 
-		let resp1 = match reqwest::blocking::get("https://www.youtube.com/") {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 1 = {}", err)
-		};
-		println!("{}", resp1);
-		/*
-		let resp2 = match reqwest::blocking::get(body2) {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 2 = {}", err)
-		};
-		println!("{}", resp2);
-		let resp3 = match reqwest::blocking::get(body3) {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 3 = {}", err)
-		};
-		println!("{}", resp3);
-		let resp4 = match reqwest::blocking::get(body4) {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 4 = {}", err)
-		};
-		println!("{}", resp4);
-		let resp5 = match reqwest::blocking::get(body5) {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 5 = {}", err)
-		};
-		println!("{}", resp5);
-		let resp6 = match reqwest::blocking::get(body6) {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 6 = {}", err)
-		};
-		println!("{}", resp6);
-		let resp7 = match reqwest::blocking::get(body7) {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 7 = {}", err)
-		};
-		println!("{}", resp7);
-		let resp8 = match reqwest::blocking::get(body8) {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 8 = {}", err)
-		};
-		println!("{}", resp8);
-		let resp9 = match reqwest::blocking::get(body9) {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 9 = {}", err)
-		};
-		println!("{}", resp9);
-		let resp10 = match reqwest::blocking::get(body10) {
-			Ok(server) => server.text().unwrap(),
-			Err(err) => panic!("Error 10 = {}", err)
-		};
-		println!("{}", resp10);
-		 */
-		return Ok(());
-	}
+	let resp1 = reqwest::blocking::get("https://www.youtube.com/")?;
+	let body1 = resp1.text()?;
+	println!("body1 = {:?}", body1);
+
+	//Um teste aqui em baixo para testar as coisas
+
+	/*
+
+	let resp2 = match client.post( "https://www.youtube.com/").json(&map).send() {
+		Ok(resp2) => resp2.text().unwrap(),
+		Err(err) => panic!("Error: {}", err)
+	};
+
+	println!("{}", resp2);
+
+	*/
+
+	let resp2 = reqwest::blocking::get("https://www.facebook.com/")?;
+	let body2 = resp2.text()?;
+	println!("body2 = {:?}", body2);
+
+	let resp3 = reqwest::blocking::get("https://www.twitter.com/")?;
+	let body3 = resp3.text()?;
+	println!("body3 = {:?}", body3);
+
+
+	Ok(())
+}
+
+#[tokio::main]
+async fn main() ->  Result<(), Box<dyn std::error::Error>> {
+	tokio::task::spawn_blocking(move || todos_blockings_gets().unwrap()).await?;
+	// let filtros = ["https://doubleclick.net/",
+	//	"https://googleadservices.com/",
+	//	"https://googlesyndication.com/",
+	//	"https://google-analytics.com/",
+	//	"https://creative.ak.fbcdn.net/",
+	//	"https://adbrite.com/",
+	//	"https://exponential.com/",
+	//	"https://quantserve.com/",
+	//	"https://scorecardresearch.com/",
+	//	"https://zedo.com/", ];
+
+	/*
+
+    let resp1 = match reqwest::blocking::get("https://www.youtube.com/") {
+        Ok(server) => server.text().unwrap(),
+        Err(err) => panic!("Error 1 = {}", err)
+    };
+     */
+	Ok(())
 }
