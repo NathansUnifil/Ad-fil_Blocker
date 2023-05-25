@@ -1,5 +1,12 @@
 // #![allow(unused)]
 
+
+/*
+
+ISSO É APENAS UM CHEATSHEET CASO EU ESQUEÇA DE ALGUMA COISA, E NÃO FAZ PARTE DO AD-FIL BLOCKER OU É ASSOCIADO
+
+*/
+
 use std::cmp::Ordering;
 use std::io;
 use std::ops::Add;
