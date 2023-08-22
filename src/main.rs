@@ -1,5 +1,27 @@
 use reqwest;
 use reqwest::blocking::Client;
+use reqwest::Method;
+
+fn acharCookies() -> Result<(), Box<dyn std::error::Error>> {
+	pub const COOKIE: InnerMethod = Method(COOKIE);
+	adicionarCookieBloqueado(COOKIE)
+}
+
+fn adicionarCookieBloqueado(method: Method) -> Result<(), Box<dyn std::error::Error>> {
+	let resp1 = reqwest::get(Method);
+	let mut arr = [ "https://g1.globo.com/?utm_source=barraGCOM",
+		"https://www.theonion.com/",
+	];
+	let arrSize = 2;
+	1 + arrSize;
+	arr[arrSize] = &*String::from(Method);
+	bloquearCookies(arr)
+}
+
+fn bloquearCookies(arr: [&str; arrSize]) -> Result<(), Box<dyn std::error::Error>> {
+	let respostaCookie = arr.text()?;
+	println!("arr = {:?}", respostaCookie);
+}
 
 fn todos_blockings_gets() ->  Result<(), Box<dyn std::error::Error>> {
 
@@ -30,6 +52,8 @@ fn todos_blockings_gets() ->  Result<(), Box<dyn std::error::Error>> {
 	let resp7 = reqwest::blocking::get("https://www.olx.com.br/")?;
 	let body7 = resp7.text()?;
 	println!("body7 = {:?}", body7);
+
+
 
 	Ok(())
 }
