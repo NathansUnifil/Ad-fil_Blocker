@@ -1,26 +1,28 @@
 use reqwest;
 use reqwest::blocking::Client;
+use reqwest::header::{COOKIE, HeaderName};
 use reqwest::Method;
 
-fn acharCookies() -> Result<(), Box<dyn std::error::Error>> {
-	pub const COOKIE: InnerMethod = Method(COOKIE);
-	adicionarCookieBloqueado(COOKIE)
+const  arr: &'static [&'static str]  = &["https://g1.globo.com/?utm_source=barraGCOM",
+"https://www.theonion.com/",
+];
+const arr_size:i32 = 2;
+
+fn achar_cookies() -> Result<(), Box<dyn std::error::Error>> {
+	let COOKIE = assert_eq!(Method::GET, Method::from_bytes(b"GET").unwrap());
+	adicionar_cookie_bloqueado(COOKIE)
 }
 
-fn adicionarCookieBloqueado(method: Method) -> Result<(), Box<dyn std::error::Error>> {
-	let resp1 = reqwest::get(Method);
-	let mut arr = [ "https://g1.globo.com/?utm_source=barraGCOM",
-		"https://www.theonion.com/",
-	];
-	let arrSize = 2;
-	1 + arrSize;
-	arr[arrSize] = &*String::from(Method);
-	bloquearCookies(arr)
+fn adicionar_cookie_bloqueado(method: HeaderName) -> Result<(), Box<dyn std::error::Error>> {
+	let resp1 = reqwest::get(b"GET");
+	1 + arr_size;
+	arr[arr_size] = &*String::from(resp1);
+	bloquear_cookies(arr)
 }
 
-fn bloquearCookies(arr: [&str; arrSize]) -> Result<(), Box<dyn std::error::Error>> {
-	let respostaCookie = arr.text()?;
-	println!("arr = {:?}", respostaCookie);
+fn bloquear_cookies(arr: &[&str]) -> Result<(), Box<dyn std::error::Error>> {
+	let resposta_cookie = arr.text()?;
+	println!("arr = {:?}", resposta_cookie);
 }
 
 fn todos_blockings_gets() ->  Result<(), Box<dyn std::error::Error>> {
