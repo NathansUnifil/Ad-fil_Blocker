@@ -8,6 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9f7c63f-7ed5-4987-bd71-bf6e7f898826" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/cookie.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -45,25 +47,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Usuario/.vscode/Laboratorio_22-05-2023-parte_1_Nathan_GoncalvesRambalducci&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.disableDetachedFileInspectionD:/Usuario/Documents/Rust projects/Ad-fil_Blocker/src/exemple.rs&quot;: &quot;true&quot;,
-    &quot;org.rust.disableDetachedFileInspectionD:/Usuario/Documents/Rust projects/Ad-fil_Blocker/src/restaurant/restaurante.rs&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;inlay.hints&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Usuario/.vscode/Laboratorio_22-05-2023-parte_1_Nathan_GoncalvesRambalducci",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.disableDetachedFileInspectionD:/Usuario/Documents/Rust projects/Ad-fil_Blocker/src/cookie.rs": "true",
+    "org.rust.disableDetachedFileInspectionD:/Usuario/Documents/Rust projects/Ad-fil_Blocker/src/cookie/cookie.rs": "true",
+    "org.rust.disableDetachedFileInspectionD:/Usuario/Documents/Rust projects/Ad-fil_Blocker/src/exemple.rs": "true",
+    "org.rust.disableDetachedFileInspectionD:/Usuario/Documents/Rust projects/Ad-fil_Blocker/src/restaurant/restaurante.rs": "true",
+    "settings.editor.selected.configurable": "inlay.hints",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Usuario\Documents\Rust projects\Ad-fil_Blocker\src\restaurant" />
       <recent name="D:\Usuario\Documents\Rust projects\Ad-fil_Blocker\src" />
+      <recent name="D:\Usuario\Documents\Rust projects\Ad-fil_Blocker\src\restaurant" />
     </key>
   </component>
   <component name="RunManager">
