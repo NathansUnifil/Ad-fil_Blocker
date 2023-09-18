@@ -1,4 +1,5 @@
 //mod cookie//
+
 use std::error::Error;
 use reqwest;
 use reqwest::blocking::Client;
@@ -34,8 +35,6 @@ fn todos_blockings_gets() ->  Result<(), Box<dyn std::error::Error>> {
 	let resp7 = reqwest::blocking::get("https://www.olx.com.br/")?;
 	let body7 = resp7.text()?;
 	println!("body7 = {:?}", body7);
-
-
 
 	Ok(())
 }
